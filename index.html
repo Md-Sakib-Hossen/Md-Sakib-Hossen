@@ -421,6 +421,16 @@
             border-radius: 50px;
             align-self: flex-start;
         }
+        .project-live-link {
+            display: inline-block;
+            margin-top: 4px;
+            font-size: 0.8rem;
+            color: var(--accent);
+            text-decoration: underline;
+            font-weight: 500;
+            transition: color var(--transition);
+        }
+        .project-live-link:hover { color: var(--accent-dark); }
         .project-doc-link {
             display: inline-block;
             margin-top: 4px;
@@ -431,7 +441,6 @@
             transition: color var(--transition);
         }
         .project-doc-link:hover { color: var(--accent-dark); }
-
 
         /* ─── CONTACT ──────────────────────────────── */
         #contact { background: var(--bg-primary); }
@@ -828,7 +837,7 @@
                 </p>
                 <div class="about-stats">
                     <div class="stat-item">
-                        <div class="stat-number" id="stat-projects">3+</div>
+                        <div class="stat-number" id="stat-projects">4+</div>
                         <div class="stat-label">Major Projects</div>
                     </div>
                     <div class="stat-item">
@@ -861,6 +870,14 @@
                 <h3>Master Academic Coaching Center</h3>
                 <p>Built a dynamic, user-friendly web application with clean code structure and responsive design. Integrated backend database modules for user data management and deployed via GitHub Pages.</p>
                 <span class="project-tag">Live: mdsakib22ais-design.github.io/Master</span>
+                <a href="#" class="project-doc-link" style="display:none;">📄 View Documentation</a>
+            </div>
+            <div class="project-card" data-project-id="proj4">
+                <div class="project-icon">💻</div>
+                <h3>Tech & Finance Platform</h3>
+                <p>A modern web platform bridging technology and financial insights. Built with cutting-edge web technologies and deployed on Vercel for optimal performance and reliability.</p>
+                <span class="project-tag">Vercel Deployment</span>
+                <a href="https://tech-and-finance.vercel.app" target="_blank" class="project-live-link">🔗 Live: tech-and-finance.vercel.app</a>
                 <a href="#" class="project-doc-link" style="display:none;">📄 View Documentation</a>
             </div>
             <div class="project-card" data-project-id="proj3">
@@ -1133,6 +1150,7 @@
                       <input data-field="icon" data-key="${key}" value="${escapeHtml(p.icon||'')}" placeholder="Icon" style="margin-bottom:6px;">
                       <textarea data-field="description" data-key="${key}" rows="2" style="margin-bottom:6px;">${escapeHtml(p.description||'')}</textarea>
                       <input data-field="tag" data-key="${key}" value="${escapeHtml(p.tag||'')}" placeholder="Tag" style="margin-bottom:6px;">
+                      <input data-field="liveLink" data-key="${key}" value="${escapeHtml(p.liveLink||'')}" placeholder="Live Link" style="margin-bottom:6px;">
                       <input data-field="docLink" data-key="${key}" value="${escapeHtml(p.docLink||'')}" placeholder="Doc Link" style="margin-bottom:8px;">
                       <button class="admin-btn admin-btn-save" onclick="saveSingleProject('${key}')">💾 Save</button>
                       <button class="admin-btn admin-btn-delete" onclick="deleteProject('${key}')">🗑 Delete</button>
@@ -1152,7 +1170,7 @@
             db.ref('projects/' + key).remove().then(() => { loadProjectsToAdmin(); refreshPublicProjects(); });
         };
         document.getElementById('adminAddProjectBtn').addEventListener('click', () => {
-            db.ref('projects/proj_' + Date.now()).set({ title:'New Project', icon:'📌', description:'', tag:'', docLink:'' })
+            db.ref('projects/proj_' + Date.now()).set({ title:'New Project', icon:'📌', description:'', tag:'', liveLink:'', docLink:'' })
               .then(() => { loadProjectsToAdmin(); refreshPublicProjects(); });
         });
 
@@ -1266,7 +1284,14 @@
                 let html = '';
                 Object.keys(data).forEach(k => {
                     const p = data[k];
-                    html += `<div class="project-card"><div class="project-icon">${escapeHtml(p.icon||'📌')}</div><h3>${escapeHtml(p.title||'')}</h3><p>${escapeHtml(p.description||'')}</p><span class="project-tag">${escapeHtml(p.tag||'')}</span>${p.docLink ? `<a href="${escapeHtml(p.docLink)}" target="_blank" class="project-doc-link">📄 View Documentation</a>` : ''}</div>`;
+                    html += `<div class="project-card">
+                        <div class="project-icon">${escapeHtml(p.icon||'📌')}</div>
+                        <h3>${escapeHtml(p.title||'')}</h3>
+                        <p>${escapeHtml(p.description||'')}</p>
+                        <span class="project-tag">${escapeHtml(p.tag||'')}</span>
+                        ${p.liveLink ? `<a href="${escapeHtml(p.liveLink)}" target="_blank" class="project-live-link">🔗 ${escapeHtml(p.liveLink)}</a>` : ''}
+                        ${p.docLink ? `<a href="${escapeHtml(p.docLink)}" target="_blank" class="project-doc-link">📄 View Documentation</a>` : ''}
+                    </div>`;
                 });
                 document.getElementById('projectsGrid').innerHTML = html;
             });
